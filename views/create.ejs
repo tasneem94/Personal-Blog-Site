@@ -18,14 +18,16 @@
       </ul>
     </nav>
 
-    <div class="blogs content">
-      <h2>All Blogs</h2>
-      <% if(blogs.length>0) { %> <% blogs.forEach((blog)=>{ %>
-      <h3 class="title"><%= blog.title %></h3>
-      <p class="snippet"><%= blog.snippet %></p>
-      <% }) %> <% } else { %>
-      <p>There are no blogs to display</p>
-      <% } %>
+    <div class="create-blog content">
+      <form>
+        <label for="title">Blog Title</label><br />
+        <input type="text" id="title" required /><br />
+        <label for="snippet">Blog Snippet</label><br />
+        <input type="text" id="snippet" required /><br />
+        <label for="body">Blog body</label><br />
+        <textarea id="body" required></textarea><br />
+        <button>Submit</button>
+      </form>
     </div>
   </body>
 </html>

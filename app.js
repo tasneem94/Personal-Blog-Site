@@ -11,19 +11,31 @@ app.set("view engine", "ejs");
 app.listen(3000);
 
 app.get("/", (req, res) => {
-  //   res.send("<p>This is home page</p>");
-  res.sendFile("./views/index.html", { root: __dirname });
+  const blogs = [
+    {
+      title: "X plays football",
+      snippet: "lorem ipsum dolor sit amet consecetur",
+    },
+    {
+      title: "Y catches bird",
+      snippet: "lorem ipsum dolor sit amet consecetur",
+    },
+    {
+      title: "X drives a car",
+      snippet: "lorem ipsum dolor sit amet consecetur",
+    },
+  ];
+  res.render("index", { title: "Home", blogs });
 });
 
 app.get("/about", (req, res) => {
-  //   res.send("<p>This is home page</p>");
-  res.sendFile("./views/about.html", { root: __dirname });
+  res.render("about", { title: "About" });
 });
 
-app.get("/about-me", (req, res) => {
-  res.redirect("/about");
+app.get("/blogs/create", (req, res) => {
+  res.render("create", { title: "Create a New Blog" });
 });
 
 app.use((req, res) => {
-  res.status(404).sendFile("./views/error.html", { root: __dirname });
+  res.status(404).render("error", { title: "404" });
 });

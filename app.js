@@ -10,6 +10,9 @@ app.set("view engine", "ejs");
 //listen for request
 app.listen(3000);
 
+//middleware static files
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
   const blogs = [
     {

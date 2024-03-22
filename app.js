@@ -19,67 +19,80 @@ app.set("view engine", "ejs");
 
 //middleware static files
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
 //mongoose and mongo sandbox routes
-app.get("/add-blog", (req, res) => {
-  const blog = new Blog({
-    title: "New Blog 2",
-    snippet: "about my new blog",
-    body: "Deatils abot my new blog",
-  });
+// app.get("/add-blog", (req, res) => {
+//   const blog = new Blog({
+//     title: "New Blog 2",
+//     snippet: "about my new blog",
+//     body: "Deatils abot my new blog",
+//   });
 
-  blog
-    .save()
+//   blog
+//     .save()
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
+
+// app.get("/all-blogs", (req, res) => {
+//   Blog.find()
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       comsole.log(err);
+//     });
+// });
+
+// app.get("/single-blog", (req, res) => {
+//   Blog.findById("65f57095f838f205cf10a309")
+//     .then((result) => {
+//       res.send(result);
+//     })
+//     .catch((err) => {
+//       comsole.log(err);
+//     });
+// });
+
+//
+
+app.get("/", (req, res) => {
+  res.redirect("/blogs");
+});
+
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About" });
+});
+
+//blog routes
+app.get("/blogs", (req, res) => {
+  Blog.find()
+    .sort({ createdAt: -1 })
     .then((result) => {
-      res.send(result);
+      res.render("index", { title: "All blogs", blogs: result });
     })
     .catch((err) => {
       console.log(err);
     });
 });
 
-app.get("/all-blogs", (req, res) => {
-  Blog.find()
+app.post("/blogs", (req, res) => {
+  // console.log(req.body);
+  const blog = new Blog(req.body);
+
+  blog
+    .save()
     .then((result) => {
-      res.send(result);
+      res.redirect("/blogs");
     })
     .catch((err) => {
-      comsole.log(err);
+      console.log(err);
     });
-});
-
-app.get("/single-blog", (req, res) => {
-  Blog.findById("65f57095f838f205cf10a309")
-    .then((result) => {
-      res.send(result);
-    })
-    .catch((err) => {
-      comsole.log(err);
-    });
-});
-
-//
-
-app.get("/", (req, res) => {
-  const blogs = [
-    {
-      title: "X plays football",
-      snippet: "lorem ipsum dolor sit amet consecetur",
-    },
-    {
-      title: "Y catches bird",
-      snippet: "lorem ipsum dolor sit amet consecetur",
-    },
-    {
-      title: "X drives a car",
-      snippet: "lorem ipsum dolor sit amet consecetur",
-    },
-  ];
-  res.render("index", { title: "Home", blogs });
-});
-
-app.get("/about", (req, res) => {
-  res.render("about", { title: "About" });
 });
 
 app.get("/blogs/create", (req, res) => {

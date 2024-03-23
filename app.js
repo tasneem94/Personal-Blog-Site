@@ -2,6 +2,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Blog = require("./models/blog");
+const { render } = require("ejs");
 
 //express app
 const app = express();
@@ -21,44 +22,11 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-//mongoose and mongo sandbox routes
-// app.get("/add-blog", (req, res) => {
-//   const blog = new Blog({
-//     title: "New Blog 2",
-//     snippet: "about my new blog",
-//     body: "Deatils abot my new blog",
-//   });
-
-//   blog
-//     .save()
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// });
-
-// app.get("/all-blogs", (req, res) => {
-//   Blog.find()
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => {
-//       comsole.log(err);
-//     });
-// });
-
-// app.get("/single-blog", (req, res) => {
-//   Blog.findById("65f57095f838f205cf10a309")
-//     .then((result) => {
-//       res.send(result);
-//     })
-//     .catch((err) => {
-//       comsole.log(err);
-//     });
-// });
-
+//testing
+app.use((req, res, next) => {
+  console.log("Request URL:", req.originalUrl);
+  next();
+});
 //
 
 app.get("/", (req, res) => {
@@ -82,9 +50,7 @@ app.get("/blogs", (req, res) => {
 });
 
 app.post("/blogs", (req, res) => {
-  // console.log(req.body);
   const blog = new Blog(req.body);
-
   blog
     .save()
     .then((result) => {
@@ -97,6 +63,28 @@ app.post("/blogs", (req, res) => {
 
 app.get("/blogs/create", (req, res) => {
   res.render("create", { title: "Create a New Blog" });
+});
+
+app.get("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findById(id)
+    .then((result) => {
+      res.render("details", { title: "Blog details", blog: result });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.delete("/blogs/:id", (req, res) => {
+  const id = req.params.id;
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/blogs" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use((req, res) => {
